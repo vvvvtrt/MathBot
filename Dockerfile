@@ -1,7 +1,7 @@
 FROM python:3.12
-WORKDIR /app
+WORKDIR /site
 COPY . .
 
-
+RUN ollama run deepseek-r1:14b
 RUN pip install --upgrade pip & pip install -r requirements.txt
-CMD ["python3", "main.py"]
+CMD ["uvicorn", "app:create_app", "--host", "0.0.0.0", "--port", "80"]
