@@ -45,7 +45,7 @@ class Model_API:
 
 
 def ollama(text) -> str:
-    response: ChatResponse = chat(model='deepseek-r1', messages=[
+    response: ChatResponse = chat(model='deepseek-r1:7b', messages=[
         {
             'role': 'user',
             'content': text,
