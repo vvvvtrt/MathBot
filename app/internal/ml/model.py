@@ -119,4 +119,4 @@ class Model_llama_70B2:
 
 
 if __name__ == '__main__':
-    print(Model_llama_70B2("").generate("Питание"))
+    print(ollama("Придумай задачи для сложный одночлен"))

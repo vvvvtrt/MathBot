@@ -22,12 +22,20 @@ router = APIRouter(
 @dataclass
 class Generate(BaseModel):
     query: str
-    model_type: str
 
 
 
+promt = """Сделай только примеры без комментариев в фомате и потом через раделитель <answer> решение:
+1. \[\int x^2 \, dx = ?\]
+2. d * e = ?
+<answer>
+1.\[\int x^2 \, dx = \frac{x^{3}}{3} + C\]
+2. d * e = f
+Тема на которую надо сделать примеры: """
 
-@router.post("/generate")
+
+@router.get("/generate")
 async def generate(data: Generate):
-    llm.ollama(data.query)
+    answer = llm.ollama(promt + data.query)
+    return answer[answer.index("</think>")+8:]
 
