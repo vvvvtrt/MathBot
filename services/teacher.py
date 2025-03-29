@@ -8,7 +8,11 @@ class TeacherService:
         self.pattern_repository = pattern_repository
 
     async def create_teacher(self, telegram_id: str, name: str):
-        return await self.teacher_repository.add_teacher(telegram_id=telegram_id, name=name)
+        teacher = await self.teacher_repository.get_teacher_by_telegram_id(telegram_id)
+        if teacher is not None:
+            return teacher
+        else:
+            return await self.teacher_repository.add_teacher(telegram_id=telegram_id, name=name)
 
     async def create_pattern(self, teacher_telegram_id: str, pattern_name: str,
                              generated_images: str = None, answers_to_tasks: str = None):

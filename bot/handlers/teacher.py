@@ -103,7 +103,7 @@ async def validate_password(state: FSMContext):
             name = str(call.from_user.username)
             new_teacher = await teacher_service.create_teacher(telegram_id=telegram_id, name=name)
             if new_teacher is not None:
-                print(f"[DB] Созданный учитель: {new_teacher.name}")
+                print(f"[DB] Авторизованный учитель: {new_teacher.name}")
         await call.message.edit_text(
             text="Добро пожаловать!\nЭто ваша домашняя страница тут вы можете...",
             reply_markup=teacher_kb()
