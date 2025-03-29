@@ -10,7 +10,7 @@ from aiogram.fsm.state import StatesGroup, State
 import config
 # from bot.keyboards.start import start_kb
 from bot.keyboards.teacher import teacher_kb, teacher_login_kb, return_to_login_kb, return_to_menu_kb, \
-    look_or_add_patterns_kb, home_task_kb
+    look_or_add_patterns_kb, home_task_kb, send_home_task_kb
 from config import bot, dp
 from aiogram.types import CallbackQuery, Message
 
@@ -32,11 +32,12 @@ class PatternState(StatesGroup):
 
 class GiveHomeTask(StatesGroup):
     wait = State()
-    done = State()
+    choosing = State()
 
 
 @dp.callback_query(F.data == "teacher_login")
-async def teacher_login(callback: CallbackQuery):
+async def teacher_login(callback: CallbackQuery, state: FSMContext):
+    await state.clear()
     await bot.edit_message_text(
         chat_id=callback.message.chat.id,
         message_id=callback.message.message_id,
@@ -230,11 +231,55 @@ async def patterns_typing(message: Message, state: FSMContext):
     patterns = "\n".join([i for i in message.text.split(" ")])
 
     await callback.message.edit_text(
-        text=f"Выбранные узоры:\n\n {patterns}",
+        text=f"Выбранные узоры:\n\n{patterns}",
         reply_markup=home_task_kb()
     )
     await state.update_data(patterns=message.text)
-    await state.set_state(GiveHomeTask.done)
 
 
-# @dp.callback_query(F.data == "choose_student")
+@dp.callback_query(F.data == "choose_student")
+async def choose_student(callback: CallbackQuery, state: FSMContext):
+    # todo достать список учеников
+    student_lst = ["Denis", "Ne Denis"]
+    await bot.edit_message_text(
+        chat_id=callback.message.chat.id,
+        message_id=callback.message.message_id,
+        text="Выберите и напишите никнейм ученика:\n\n" +
+        "\n".join([i for i in student_lst]),
+        reply_markup=return_to_menu_kb()
+    )
+    await state.update_data(call=callback)
+    await state.set_state(GiveHomeTask.choosing)
+
+
+@dp.message(StateFilter(GiveHomeTask.choosing))
+async def generate_task_and_send(message: Message, state: FSMContext):
+    data = await state.get_data()
+    await message.delete()
+
+    callback = data["call"]
+    await state.update_data(nickname=message.text)
+
+    await callback.message.edit_text(
+        text=f"Выбранный ученик:\n\n {message.text}",
+        reply_markup=send_home_task_kb(message.text)
+    )
+
+
+@dp.callback_query(lambda c: c.data.split("_")[0] == "send")
+async def send_home_task(callback: CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    count = callback.data.split("_")[1]
+    nickname = data["nickname"]
+    patterns = data["patterns"]
+
+    # todo по никнеймку достаем айди
+    # TODO генерим пикчи
+    # todo записываем в бд ученику его новое дз
+    await callback.answer(text="дз отправлено", show_alert=True)
+    await bot.edit_message_text(
+        chat_id=callback.message.chat.id,
+        message_id=callback.message.message_id,
+        text="Добро пожаловать!\nЭто ваша домашняя страница тут вы можете...",
+        reply_markup=teacher_kb()
+    )
