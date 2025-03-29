@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
 from database.env import DATABASE_URL
-from database.repositories.teacher import TeacherRepository
+from repositories.teacher import TeacherRepository
 
 
 # logging.basicConfig(level=logging.WARNING)
@@ -22,7 +22,7 @@ async def main():
         repo = TeacherRepository(session)
 
         # Пример использования репозитория
-        await repo.add_teacher("123456790", "Кто-то ктотович")
+        await repo.add_teacher("123456791", "Кто-то ктотович 111")
         teacher = await repo.get_teacher_by_telegram_id("123456790")
         print(f"Retrieved Teacher: {teacher.name}")
 

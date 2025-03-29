@@ -35,6 +35,17 @@ class StudentRepository:
             print(f"Error getting student: {e}")
             return None
 
+    async def get_patterns_id_by_telegram_id(
+            self, telegram_id: str) -> list[int] | None:
+        try:
+            result = await self.session.execute(select(
+                Students.pattern_id).filter_by(telegram_id=telegram_id))
+            return result.scalars().all()
+        except SQLAlchemyError as e:
+            await self.session.rollback()  # Откат транзакции
+            print(f"Error getting patterns_id by student telegram_id: {e}")
+            return None
+
     async def update_student(self, telegram_id: str, name: str,
                              pattern_id: int = None) -> Students | None:
         try:

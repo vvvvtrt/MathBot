@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 token = os.getenv("TOKEN")
 
+
 async def main():
     bot = Bot(token=token)
     dp = Dispatcher()

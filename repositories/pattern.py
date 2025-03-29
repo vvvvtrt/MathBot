@@ -35,6 +35,17 @@ class PatternRepository:
             print(f"Error getting pattern: {e}")
             return None
 
+    async def get_patterns_by_teacher_id(
+            self, teacher_id: int) -> list[Patterns] | None:
+        try:
+            result = await self.session.execute(select(Patterns).filter_by(
+                teacher_id=teacher_id))
+            return result.scalars().all()  # Возвращаем паттерны для учителя
+        except SQLAlchemyError as e:
+            await self.session.rollback()  # Откат транзакции
+            print(f"Error getting patterns by teacher_id: {e}")
+            return None
+
     async def update_pattern(self, pattern_id: int, pattern_name: str,
                              generated_images: str = None,
                              answers_to_tasks: str = None) -> Patterns | None:
