@@ -39,23 +39,25 @@ def return_to_login_kb():
 
 def return_to_menu_kb():
     buttons = [
-        [InlineKeyboardButton(text="Назад", callback_data="teacher")],
+        [InlineKeyboardButton(text="Назад в меню", callback_data="teacher")],
     ]
     keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
     return keyboard
 
 def home_task_kb():
     buttons = [
-        [InlineKeyboardButton(text="Выбрать ученика", callback_data="choose_student")],
-        [InlineKeyboardButton(text="Назад", callback_data="teacher")],
+        [InlineKeyboardButton(text="Все верно, выбрать ученика", callback_data="choose_student")],
+        [InlineKeyboardButton(text="Назад в меню", callback_data="teacher")],
     ]
     keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
     return keyboard
 
+
 def send_home_task_kb(nicname):
     buttons = [
         [InlineKeyboardButton(text=f"Отправить {nicname}", callback_data="sent_home_task")],
-        [InlineKeyboardButton(text="Назад", callback_data="teacher")],
+        [InlineKeyboardButton(text="Назад в меню", callback_data="teacher")],
     ]
     keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
     return keyboard
+

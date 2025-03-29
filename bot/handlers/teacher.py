@@ -5,11 +5,12 @@ from aiogram import F
 from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
+from pydantic.v1.validators import anystr_strip_whitespace
 
 import config
 from bot.keyboards.start import start_kb
 from bot.keyboards.teacher import teacher_kb, teacher_login_kb, return_to_login_kb, return_to_menu_kb, \
-    look_or_add_patterns_kb
+    look_or_add_patterns_kb, home_task_kb
 from config import bot, dp
 from aiogram.types import CallbackQuery, Message
 
@@ -20,6 +21,11 @@ class AuthState(StatesGroup):
 
 class PatternState(StatesGroup):
     wait = State()
+
+
+class GiveHomeTask(StatesGroup):
+    wait = State()
+    done = State()
 
 
 @dp.callback_query(F.data == "teacher_login")
@@ -150,10 +156,33 @@ async def pattern_typing(message: Message, state: FSMContext):
 
 
 @dp.callback_query(F.data == "home_tasks")
-async def home_tasks(callback: CallbackQuery):
+async def home_tasks(callback: CallbackQuery, state: FSMContext):
+    # todo получить все узоры
+    patterns = ["Хохма", "Хохма", "Хохма", "Хохма", "Хохма", "Хохма", "Хохма", "Хохма", "Хохма", "Хохма", "Хохма"]
+    patterns_str = "\n".join([i for i in patterns])
     await bot.edit_message_text(
         chat_id=callback.message.chat.id,
         message_id=callback.message.message_id,
-        text="Напишите по каким узорам дать дз",
+        text="Напишите по каким узорам дать дз через пробел\n\n" + patterns_str,
         reply_markup=return_to_menu_kb()
     )
+    await state.update_data(call=callback)
+    await state.set_state(GiveHomeTask.wait)
+
+
+@dp.message(StateFilter(GiveHomeTask.wait))
+async def patterns_typing(message: Message, state: FSMContext):
+    data = await state.get_data()
+    await message.delete()
+
+    callback = data["call"]
+    patterns = "\n".join([i for i in message.text.split(" ")])
+
+    await callback.message.edit_text(
+        text=f"Выбранные узоры:\n\n {patterns}",
+        reply_markup=home_task_kb()
+    )
+    await state.update_data(patterns=message.text)
+    await state.set_state(GiveHomeTask.done)
+
+@dp.callback_query(F.data == "choose_student")
