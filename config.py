@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 
 load_dotenv()
-token = "6854770104:AAHuY8IwSJy4-dOsWFdNjT9LvJZgq858oNM"# os.getenv()
+token = "6998740889:AAECC8AcxxqlWVHBgIjuu3LQYS8Qj_LujKY"# os.getenv()
 admin_password = "1"# os.getenv()
 
 bot = Bot(token=token)

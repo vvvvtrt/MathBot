@@ -53,9 +53,12 @@ def home_task_kb():
     return keyboard
 
 
-def send_home_task_kb(nicname):
+def send_home_task_kb(name):
     buttons = [
-        [InlineKeyboardButton(text=f"Отправить {nicname}", callback_data="sent_home_task")],
+        [InlineKeyboardButton(text=f"Отправить 1 задание", callback_data=f"send_1_{name}")],
+        [InlineKeyboardButton(text=f"Отправить 3 задание", callback_data=f"send_3_{name}")],
+        [InlineKeyboardButton(text=f"Отправить 5 задание", callback_data=f"send_5_{name}")],
+        [InlineKeyboardButton(text=f"Отправить 10 задание", callback_data=f"send_10_{name}")],
         [InlineKeyboardButton(text="Назад в меню", callback_data="teacher")],
     ]
     keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
