@@ -134,9 +134,9 @@ if __name__ == "__main__":
 </answer>
 Тема на которую надо сделать примеры: """
 
-    url = "http://localhost:11434/api/generate"
+    url = "http://54.158.41.142:11434/api/generate"
     data = {
-        "model": "deepseek-r1:7b",
+        "model": "deepseek-r1",
         "prompt": prompt,
         "stream": False
     }
