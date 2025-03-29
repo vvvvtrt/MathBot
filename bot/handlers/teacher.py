@@ -22,6 +22,13 @@ from repositories.pattern import PatternRepository
 from services.teacher import TeacherService
 # from services.student import StudentService
 
+import os
+import aiofiles
+from aiogram.types import InputFile, FSInputFile
+import io
+from aiogram.types import Message, InputFile, FSInputFile, BufferedInputFile
+import tempfile
+
 
 class AuthState(StatesGroup):
     wait = State()
@@ -210,8 +217,8 @@ async def pattern_typing(message: Message, state: FSMContext):
 @dp.callback_query(F.data == "home_tasks")
 async def home_tasks(callback: CallbackQuery, state: FSMContext):
     # todo получить все узоры
-    patterns = ["Хохма", "Хохма", "Хохма", "Хохма", "Хохма",
-                "Хохма", "Хохма", "Хохма", "Хохма", "Хохма", "Хохма"]
+    patterns = ["Узор", "Узор", "Узор", "Узор", "Узор",
+                "Узор", "Узор", "Узор", "Узор", "Узор", "Узор"]
     patterns_str = "\n".join([i for i in patterns])
     await bot.edit_message_text(
         chat_id=callback.message.chat.id,
@@ -241,7 +248,7 @@ async def patterns_typing(message: Message, state: FSMContext):
 @dp.callback_query(F.data == "choose_student")
 async def choose_student(callback: CallbackQuery, state: FSMContext):
     # todo достать список учеников
-    student_lst = ["Denis", "Ne Denis"]
+    student_lst = ["Denis", "Ivan", "Misha"]
     await bot.edit_message_text(
         chat_id=callback.message.chat.id,
         message_id=callback.message.message_id,
@@ -276,10 +283,29 @@ async def send_home_task(callback: CallbackQuery, state: FSMContext):
 
     # todo по никнеймку достаем айди
     user_id = 1234
+    print(patterns, count)
+    # path = request_to_ml(patterns, count)
+    # await callback.message.answer_photo(FSInputFile(path=path))
+    # user_id = callback.from_user.id
+
+    path = "avatar.jpg"
     path = request_to_ml(patterns, count)
+    print("--------PATH", path)
 
+    try:
+        # Отправляем фото
+        await callback.message.answer_photo(
+            FSInputFile(path),  # Файл должен быть в корне проекта
+            caption="Задание"
+        )
+        # Подтверждаем нажатие кнопки (убираем часики)
+        await callback.answer()
+    except FileNotFoundError:
+        await callback.message.answer("Фото не найдено!")
+        await callback.answer("Ошибка: файл не найден", show_alert=True)
+    except Exception as e:
+        await callback.answer(f"Произошла ошибка, {e}", show_alert=True)
 
-    await bot.send_photo(chat_id=user_id, photo=path)
     await callback.answer(text="дз отправлено", show_alert=True)
     await bot.edit_message_text(
         chat_id=callback.message.chat.id,
@@ -287,3 +313,42 @@ async def send_home_task(callback: CallbackQuery, state: FSMContext):
         text="Добро пожаловать!\nЭто ваша домашняя страница тут вы можете...",
         reply_markup=teacher_kb()
     )
+
+# with open(photo_path, 'rb') as photo:
+#     await bot.send_photo(chat_id=user_id,  photo=photo, caption='text')
+
+# with open("avatar.jpg", "rb") as photo:
+#     await bot.send_photo(chat_id=user_id, photo=photo)
+
+# await bot.send_photo(chat_id=user_id, photo="avatar.jpg")
+
+# photo_path = "avatar.jpg"
+# if os.path.exists(photo_path):
+#     with open(photo_path, 'rb') as photo:
+#         await bot.send_photo(chat_id=user_id, photo=photo)
+# else:
+#     print("Файл не найден!")
+
+# photo_path = "avatar.jpg"
+# if os.path.exists(photo_path):
+#     async with aiofiles.open(photo_path, 'rb') as photo_file:
+#         # photo = InputFile(photo_file)  # Создаем объект InputFile
+#         image_stream = io.BytesIO(photo_file)
+#         photo_tg = BufferedInputFile(image_stream.read(),
+#                                      filename="image.png")  # Замените на правильное расширение
+#         await bot.send_photo(chat_id=user_id, photo=photo_tg)
+# else:
+#     print("Файл не найден!")
+
+# photo_path = "avatar.jpg"
+# file_path = 'avatar.jpg'  # Укажите путь к вашему файлу
+# if os.path.exists(file_path):
+#     with open(file_path, 'rb') as file:
+#         await callback.message.answer_document(file)
+# else:
+#     await callback.answer("Файл не найден.")
+
+# await bot.send_photo(chat_id=id_tg[0], photo=photo_tg, caption=f"По адресу {address} ({lat}, {lon})\nПоявилась несанкционированная свалка мусора {ts}\n\nНужно принять меры!")
+
+# photo = InputFile("avatar.jpg")
+# await bot.send_photo(chat_id=message.chat.id, photo=photo)

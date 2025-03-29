@@ -66,8 +66,8 @@ def home_task_kb():
 
 def send_home_task_kb(name):
     buttons = [
-        [InlineKeyboardButton(
-            text=f"Отправить {nicname}", callback_data="sent_home_task")],
+        # [InlineKeyboardButton(
+        #     text=f"Отправить {nicname}", callback_data="sent_home_task")],
         [InlineKeyboardButton(text=f"Отправить 1 задание",
                               callback_data=f"send_1_{name}")],
         [InlineKeyboardButton(text=f"Отправить 3 задание",

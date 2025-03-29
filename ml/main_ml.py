@@ -3,8 +3,8 @@ from gtts import gTTS
 from pydub import AudioSegment
 import cv2
 import subprocess
-import parsing as mlpars
-import make_img as imgpars
+import ml.parsing as mlpars
+import ml.make_img as imgpars
 import requests
 
 
@@ -97,7 +97,8 @@ def make_video(image_files, texts):
 
 def main(data):
     problems, examples = mlpars.parse_math_problems(data)
-    arr_formul, arr_text, arr_problems = mlpars.print_parsed_data(problems, examples)
+    arr_formul, arr_text, arr_problems = mlpars.print_parsed_data(
+        problems, examples)
     arr_slide = []
 
     for i in range(len(arr_formul)):
@@ -134,19 +135,22 @@ def request_to_ml(patterns, count):
 </answer>
 Тема на которую надо сделать примеры: """
 
-    url = "http://54.158.41.142:11434/api/generate"
+    # url = "http://54.158.41.142:11434/api/generate"
+    url = "http://localhost:11434/api/generate"
     data = {
-        "model": "deepseek-r1",
+        "model": "deepseek-r1:7b",
         "prompt": prompt + f"Придумай {count} сложных примеров, используя темы {patterns}",
         "stream": False
     }
 
     response = requests.post(url, json=data).json()
+    print("!!!!!!!", response)
     answer = response["response"]
     data = answer[answer.index("</think>") + 8:]
-    #===
+    # ===
     problems, examples = mlpars.parse_math_problems(data)
-    arr_formul, arr_text, arr_problems = mlpars.print_parsed_data(problems, examples)
+    arr_formul, arr_text, arr_problems = mlpars.print_parsed_data(
+        problems, examples)
     arr_slide = []
 
     for i in range(len(arr_formul)):
