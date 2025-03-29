@@ -1,19 +1,15 @@
 import asyncio
-from aiogram import Bot, Dispatcher
-from bot.handlers import questions, different_types
-import os
-from dotenv import load_dotenv
+import logging
 
-load_dotenv()
-token = os.getenv("TOKEN")
+from config import dp, bot
+from bot.handlers import student
+from bot.handlers import teacher
+from bot.handlers import start
+
+
+logging.basicConfig(level=logging.DEBUG)
 
 async def main():
-    bot = Bot(token=token)
-    dp = Dispatcher()
-
-    dp.include_routers(questions.router, different_types.router)
-
-    await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
 
