@@ -1,6 +1,15 @@
 # MathBot
 
-## Fo start working with DB:
+## For start bot:
+
+Run from root project directory:
+
+```bash
+python3 main.py
+```
+
+
+## For start working with DB:
 
 1. Push vars to `.env` (example in `.env.example`)
 
