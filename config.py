@@ -1,15 +1,15 @@
 """
 Конфигурационный файл
 """
-import asyncio
 from aiogram import Bot, Dispatcher
 import os
 from dotenv import load_dotenv
 
 
 load_dotenv()
-token = "6854770104:AAHuY8IwSJy4-dOsWFdNjT9LvJZgq858oNM"# os.getenv()
-admin_password = "1"# os.getenv()
+
+token = os.getenv('TG_TOKEN')
+admin_password = os.getenv('ADMIN_PASSWORD')
 
 bot = Bot(token=token)
 dp = Dispatcher()

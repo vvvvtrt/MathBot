@@ -17,12 +17,14 @@ async def student(callback: CallbackQuery):
         reply_markup=student_kb()
     )
 
-#todo добавить получение узоров и их вывод в цикле
+# todo добавить получение узоров и их вывод в цикле
+
+
 @dp.callback_query(F.data == "look_patterns")
 async def look_patterns(callback: CallbackQuery):
     await bot.edit_message_text(
         chat_id=callback.message.chat.id,
         message_id=callback.message.message_id,
         text="Доступные темы/узоры:",
-        reply_markup = student_kb()
+        reply_markup=student_kb()
     )

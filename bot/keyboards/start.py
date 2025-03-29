@@ -8,12 +8,14 @@ def start_kb():
     buttons = [
         [
             InlineKeyboardButton(text="Ученик", callback_data="student"),
-            InlineKeyboardButton(text="Преподаватель", callback_data="teacher_login"),
+            InlineKeyboardButton(text="Преподаватель",
+                                 callback_data="teacher_login"),
         ]
     ]
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
     return keyboard
+
 
 def return_to_start_kb():
     buttons = [

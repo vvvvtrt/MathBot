@@ -22,4 +22,3 @@ async def callback_start(callback_query: CallbackQuery):
 @dp.message(Command("start"))
 async def cmd_start(message: Message):
     await message.answer("Выберите вашу роль:", reply_markup=start_kb())
-
