@@ -15,6 +15,7 @@ from config import bot, dp
 from aiogram.types import CallbackQuery, Message
 
 from database.session import get_async_session
+from ml.main_ml import request_to_ml
 from repositories.teacher import TeacherRepository
 from repositories.pattern import PatternRepository
 # from repositories.student import StudentRepository
@@ -274,8 +275,11 @@ async def send_home_task(callback: CallbackQuery, state: FSMContext):
     patterns = data["patterns"]
 
     # todo по никнеймку достаем айди
-    # TODO генерим пикчи
-    # todo записываем в бд ученику его новое дз
+    user_id = 1234
+    path = request_to_ml(patterns, count)
+
+
+    await bot.send_photo(chat_id=user_id, photo=path)
     await callback.answer(text="дз отправлено", show_alert=True)
     await bot.edit_message_text(
         chat_id=callback.message.chat.id,
