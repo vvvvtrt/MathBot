@@ -9,6 +9,7 @@ from bot.handlers import start
 
 logging.basicConfig(level=logging.DEBUG)
 
+
 async def main():
     await dp.start_polling(bot)
 
